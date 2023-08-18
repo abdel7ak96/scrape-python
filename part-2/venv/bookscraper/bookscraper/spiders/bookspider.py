@@ -1,4 +1,5 @@
 import scrapy
+from bookscraper.items import BookItem 
 
 
 class BookspiderSpider(scrapy.Spider):
@@ -26,20 +27,20 @@ class BookspiderSpider(scrapy.Spider):
 		
 	def parse_book_page(self, response):
 		table_rows = response.css('table tr')
-		yield {
-			'title': response.css('.col-sm-6.product_main h1::text').get(),
-			'category': response.css('ul.breadcrumb :nth-child(3) a ::text').get(),
-			'description': response.css('#product_description + p::text').get(),
-			'price': response.css('p.price_color::text').get(),
-			'product_type': table_rows[1].css('td ::text').get(),
-			'price_excl_tax': table_rows[2].css('td ::text').get(),
-			'price_incl_tax': table_rows[3].css('td ::text').get(),
-			'tax': table_rows[4].css('td ::text').get(),
-			'availability': table_rows[5].css('td ::text').get(),
-			'rating': response.css('p.star-rating').attrib['class'].split(' ')[1],
-			'url': response.url
-		}
+		book_item = BookItem()
+		book_item['title'] = response.css('.col-sm-6.product_main h1::text').get()
+		book_item['category'] = response.css('ul.breadcrumb :nth-child(3) a ::text').get()
+		book_item['description'] = response.css('#product_description + p::text').get()
+		book_item['price'] = response.css('p.price_color::text').get()
+		book_item['product_type'] = table_rows[1].css('td ::text').get()
+		book_item['price_excl_tax'] = table_rows[2].css('td ::text').get()
+		book_item['price_incl_tax'] = table_rows[3].css('td ::text').get()
+		book_item['tax'] = table_rows[4].css('td ::text').get()
+		book_item['availability'] = table_rows[5].css('td ::text').get()
+		book_item['rating'] = response.css('p.star-rating').attrib['class'].split(' ')[1]
+		book_item['url'] = response.url
 
+		yield book_item
 	
 
 	
