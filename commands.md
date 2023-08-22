@@ -4,6 +4,9 @@ Create python virtual environment
 Start an already created virtual environment in terminal
 `source venv/bin/activate`
 
+Create a new Scrapy project
+`scrapy startproject bookscraper`
+
 Run a spider using Scrapy
 `scrapy crawl bookspider`
 
