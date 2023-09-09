@@ -60,3 +60,87 @@ class BookscraperPipeline:
 			adapter['rating'] = 5
 
 		return item
+
+import mysql.connector
+
+class SaveToMySQLPipeline:
+	def __init__(self):
+		self.conn = mysql.connector.connect(
+			host = 'localhost',
+			user = 'root',
+			password = '',
+			database = 'books'
+		)
+
+		## Create a cursor that used to execute commands
+		self.cur = self.conn.cursor()
+
+		## Create books table if not exists
+		self.cur.execute("""
+		CREATE TABLE IF NOT EXISTS books(
+			id INT NOT NULL AUTO_INCREMENT,
+			title TEXT,
+			category VARCHAR(255),
+			description TEXT,
+			price DECIMAL,
+			product_type VARCHAR(255),
+			price_excl_tax DECIMAL,
+			price_incl_tax DECIMAL,
+			tax DECIMAL,
+			availability DECIMAL,
+			rating INTEGER,
+			url VARCHAR(255),
+			PRIMARY KEY (id)
+		)
+		""")
+
+	def process_item(self, item, spider):
+		## Define insert statement
+		self.cur.execute("""INSERT INTO BOOKS (
+				title,
+				category,
+				description,
+				price,
+				product_type,
+				price_excl_tax,
+				price_incl_tax,
+				tax,
+				availability,
+				rating,
+				url
+			) values (
+				%s,
+				%s,
+				%s,
+				%s,
+				%s,
+				%s,
+				%s,
+				%s,
+				%s,
+				%s,
+				%s
+			)""",
+				(
+					item["title"],
+					item["category"],
+					str(item["description"][0]),
+					item["price"],
+					item["product_type"],
+					item["price_excl_tax"],
+					item["price_incl_tax"],
+					item["tax"],
+					item["availability"],
+					item["rating"],
+					item["url"],
+				)
+			)
+
+		self.conn.commit()
+		return item
+
+
+		def close_spider(self, spider):
+			## Close cursor & connection to database
+			self.cur.close()
+			self.conn.close()
