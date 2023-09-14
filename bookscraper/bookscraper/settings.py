@@ -12,6 +12,19 @@ BOT_NAME = "bookscraper"
 SPIDER_MODULES = ["bookscraper.spiders"]
 NEWSPIDER_MODULE = "bookscraper.spiders"
 
+# TODO implement env variables retrieval
+SCRAPEOPS_API_KEY = ''
+
+SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'http://headers.scrapeops.io/v1/user-agents'
+SCRAPEOPS_FAKE_HEADERS_ENDPOINT = 'http://headers.scrapeops.io/v1/browser-headers'
+SCRAPEOPS_FAKE_HEADERS_ENABLED = True
+SCRAPEOPS_NUM_RESULTS = 50
+
+DOWNLOADER_MIDDLEWARES = {
+    # 'bookscraper.middlewares.ScrapeOpsFakeUserAgentMiddleware': 400,
+    'bookscraper.middlewares.ScrapeOpsFakeBrowserHeadersMiddleware': 400
+}
+
 #FEEDS = {
 #   './output/booksdata.json': {'format': 'json'}
 #}
@@ -20,7 +33,7 @@ NEWSPIDER_MODULE = "bookscraper.spiders"
 # USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.76"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
